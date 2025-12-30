@@ -98,13 +98,8 @@ jobs:
         if: github.event_name != 'pull_request'
         env:
           COSIGN_EXPERIMENTAL: "true"
-          # SIGSTORE_TUF_ROOT: https://sigstore-tuf-root.storage.googleapis.com
+          SIGSTORE_TUF_ROOT: https://sigstore-tuf-root.storage.googleapis.com
         run: |
-         TAGS="${{ steps.meta.outputs.tags }}"
-          DIGEST="${{ steps.build-and-push.outputs.digest }}"
-
-         echo "$TAGS" | tr ' ' '\n' | \
-          xargs -I {} cosign sign \
-            --tlog-upload=false \
-            {}@$DIGEST
+          echo "${{ steps.meta.outputs.tags }}" | \
+          xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
 
